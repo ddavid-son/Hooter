@@ -1,37 +1,11 @@
-// import { ClerkProvider } from "@clerk/nextjs";
-// import { Inter } from "next/font/google";
-
-// import "../globals.css";
-
-// export const metadata = {
-//   title: "hooter",
-//   description: "A simple clone to twitter/threads ",
-// };
-
-// const inter = Inter({ subsets: ["latin"] });
-
-// export default function RootLayout({
-//   children,
-// }: {
-//   children: React.ReactNode;
-// }) {
-//   return (
-//     <ClerkProvider>
-//       <html lang="en">
-//         <body className={`${inter.className} bg-dark-1`}>{children}</body>
-//       </html>
-//     </ClerkProvider>
-//   );
-// }
-
-// app/layout.tsx
 import "../globals.css";
 import { Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
-
+import type { Metadata } from "next";
+import { dark } from "@clerk/themes";
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Hooter",
   description: "A twitter clone",
 };
@@ -42,9 +16,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider>
+    <ClerkProvider appearance={{ baseTheme: dark }}>
       <html lang="en">
-        <body className={inter.className}>{children}</body>
+        <body className={`${inter.className} bg-dark-1`}>{children}</body>
       </html>
     </ClerkProvider>
   );
