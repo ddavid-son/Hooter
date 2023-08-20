@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UserValidation } from "@/lib/validations/user";
 import * as z from "zod";
+import { usePathname, useRouter } from "next/navigation";
 
 import {
   Form,
@@ -21,6 +22,7 @@ import { User } from "@clerk/nextjs/server";
 import Image from "next/image";
 import { isBase64Image } from "@/lib/utils";
 import { useUploadThing } from "@/lib/uploadthing";
+import { updateUser } from "@/lib/actions/user.actions";
 
 interface Props {
   user: {
@@ -37,6 +39,8 @@ interface Props {
 export const AccountProfile = ({ user, btnTitle }: Props) => {
   const [files, setFiles] = useState<File[]>([]);
   const { startUpload } = useUploadThing("media");
+  const pathname = usePathname();
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof UserValidation>>({
     resolver: zodResolver(UserValidation),
@@ -44,7 +48,7 @@ export const AccountProfile = ({ user, btnTitle }: Props) => {
       profile_photo: user?.image ? user.image : "",
       name: user?.name ? user.name : "",
       username: user?.username ? user.username : "",
-      bio: user?.bio ? user.bio : "",
+      bio: user?.bio ?? "",
     },
   });
 
@@ -81,7 +85,21 @@ export const AccountProfile = ({ user, btnTitle }: Props) => {
         values.profile_photo = imgRes[0].url;
       }
     }
-    // todo: update user profile
+
+    await updateUser({
+      userId: user.id,
+      username: values.username,
+      name: values.name,
+      bio: values.bio,
+      image: values.profile_photo,
+      path: pathname,
+    });
+
+    if (pathname === "/profile/edit") {
+      router.back();
+    } else {
+      router.push("/");
+    }
   }
 
   return (
@@ -127,6 +145,7 @@ export const AccountProfile = ({ user, btnTitle }: Props) => {
                   }}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -146,6 +165,7 @@ export const AccountProfile = ({ user, btnTitle }: Props) => {
                   {...field}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -165,6 +185,7 @@ export const AccountProfile = ({ user, btnTitle }: Props) => {
                   {...field}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -184,6 +205,7 @@ export const AccountProfile = ({ user, btnTitle }: Props) => {
                   {...field}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
