@@ -1,15 +1,6 @@
 import mongoose from "mongoose";
 
-export interface IHoot {
-  text: string;
-  author: mongoose.Types.ObjectId | string;
-  createdAt: Date;
-  children: mongoose.Types.ObjectId[];
-  community?: mongoose.Types.ObjectId | undefined;
-  parentId?: string | undefined;
-}
-
-const hootSchema = new mongoose.Schema<IHoot>({
+const hootSchema = new mongoose.Schema({
   text: { type: String, required: true },
   author: {
     type: mongoose.Schema.Types.ObjectId,
@@ -30,6 +21,6 @@ const hootSchema = new mongoose.Schema<IHoot>({
   ],
 });
 
-const Hoot = mongoose.models.Hoot || mongoose.model<IHoot>("Hoot", hootSchema);
+const Hoot = mongoose.models.Hoot || mongoose.model("Hoot", hootSchema);
 
 export default Hoot;

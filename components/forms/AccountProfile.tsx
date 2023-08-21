@@ -42,6 +42,8 @@ export const AccountProfile = ({ user, btnTitle }: Props) => {
   const pathname = usePathname();
   const router = useRouter();
 
+  console.log("user onboarding", user);
+
   const form = useForm<z.infer<typeof UserValidation>>({
     resolver: zodResolver(UserValidation),
     defaultValues: {

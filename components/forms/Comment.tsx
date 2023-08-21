@@ -19,7 +19,6 @@ import { Button } from "../ui/button";
 
 import { CommentValidation } from "@/lib/validations/hoot";
 import { addCommentToHoot } from "@/lib/actions/hoot.actions";
-// import { addCommentToThread } from "@/lib/actions/thread.actions";
 
 interface Props {
   hootId: string;
@@ -29,6 +28,7 @@ interface Props {
 
 function Comment({ hootId, currentUserImg, currentUserId }: Props) {
   const pathname = usePathname();
+
   const form = useForm<z.infer<typeof CommentValidation>>({
     resolver: zodResolver(CommentValidation),
     defaultValues: {

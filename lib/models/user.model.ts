@@ -1,16 +1,4 @@
 import mongoose from "mongoose";
-import { boolean } from "zod";
-
-// export interface IUser {
-//   id: string;
-//   username: string;
-//   name: string;
-//   hoots: mongoose.Types.ObjectId[];
-//   onboarded: boolean;
-//   communities: mongoose.Types.ObjectId[];
-//   image?: string | undefined;
-//   bio?: string | undefined;
-// }
 
 const userSchema = new mongoose.Schema({
   id: { type: String, required: true },

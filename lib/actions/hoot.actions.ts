@@ -1,9 +1,10 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import Hoot, { IHoot } from "../models/hoot.model";
+import Hoot from "../models/hoot.model";
 import User from "../models/user.model";
 import { connectToDB } from "../mongoose";
+import { log } from "console";
 
 interface Params {
   text: string;
@@ -15,6 +16,8 @@ interface Params {
 export async function createHoot({ text, author, communityId, path }: Params) {
   connectToDB();
 
+  log("mongo create hoot", text, author, communityId, path);
+
   try {
     const createdHoot = await Hoot.create({
       text,
@@ -23,7 +26,7 @@ export async function createHoot({ text, author, communityId, path }: Params) {
     });
 
     await User.findByIdAndUpdate(author, {
-      $push: { hoot: createdHoot._id },
+      $push: { hoots: createdHoot._id },
     });
 
     revalidatePath(path);
@@ -64,6 +67,7 @@ export async function fetchHoots(pageNumber = 1, pageSize = 20) {
 }
 
 export async function fetchHootById(id: string) {
+  //hoot id
   connectToDB();
 
   try {
