@@ -5,6 +5,7 @@ import Hoot from "../models/hoot.model";
 import User from "../models/user.model";
 import { connectToDB } from "../mongoose";
 import { log } from "console";
+import Community from "../models/community.model";
 
 interface Params {
   text: string;
@@ -16,18 +17,27 @@ interface Params {
 export async function createHoot({ text, author, communityId, path }: Params) {
   connectToDB();
 
-  log("mongo create hoot", text, author, communityId, path);
-
   try {
+    const communityIdObject = await Community.findOne(
+      { id: communityId },
+      { _id: 1 }
+    );
+
     const createdHoot = await Hoot.create({
       text,
       author,
-      community: null,
+      community: communityIdObject,
     });
 
     await User.findByIdAndUpdate(author, {
       $push: { hoots: createdHoot._id },
     });
+
+    if (communityIdObject) {
+      await Community.findByIdAndUpdate(communityIdObject, {
+        $push: { hoots: createdHoot._id },
+      });
+    }
 
     revalidatePath(path);
   } catch (error: any) {
@@ -48,9 +58,16 @@ export async function fetchHoots(pageNumber = 1, pageSize = 20) {
       .limit(pageSize)
       .populate({ path: "author", model: User })
       .populate({
+        path: "community",
+        model: Community,
+      })
+      .populate({
         path: "children",
-        model: User,
-        select: "_id name parentId image",
+        populate: {
+          path: "author",
+          model: User,
+          select: "_id name parentId image",
+        },
       });
 
     const totalHootsCount = await Hoot.countDocuments({
@@ -78,6 +95,11 @@ export async function fetchHootById(id: string) {
         select: "_id id name image",
       })
       .populate({
+        path: "community",
+        model: Community,
+        select: "_id id name image",
+      })
+      .populate({
         path: "children",
         populate: [
           {
@@ -90,6 +112,7 @@ export async function fetchHootById(id: string) {
             model: Hoot,
             populate: {
               path: "author",
+              model: User,
               select: "_id id name parentId image",
             },
           },
@@ -128,5 +151,70 @@ export async function addCommentToHoot(
     revalidatePath(path);
   } catch (error: any) {
     throw new Error(`Error adding comment to thread: ${error.message}`);
+  }
+}
+
+//
+
+async function fetchAllChildHoots(hootId: string): Promise<any[]> {
+  const childHoots = await Hoot.find({ parentId: hootId });
+
+  const descendantHoots = [];
+  for (const childHoot of childHoots) {
+    const descendants = await fetchAllChildHoots(childHoot._id);
+    descendantHoots.push(childHoot, ...descendants);
+  }
+
+  return descendantHoots;
+}
+
+export async function deleteHoot(id: string, path: string): Promise<void> {
+  try {
+    connectToDB();
+
+    const mainHoot = await Hoot.findById(id).populate("author community");
+
+    if (!mainHoot) {
+      throw new Error("Hoot not found");
+    }
+
+    const descendantHoots = await fetchAllChildHoots(id);
+
+    // Get all descendant thread IDs including the main thread ID and child thread IDs
+    const descendantHootIds = [id, ...descendantHoots.map((hoot) => hoot._id)];
+
+    // Extract the authorIds and communityIds to update User and Community models respectively
+    const uniqueAuthorIds = new Set(
+      [
+        ...descendantHoots.map((hoot) => hoot.author?._id?.toString()), // Use optional chaining to handle possible undefined values
+        mainHoot.author?._id?.toString(),
+      ].filter((id) => id !== undefined)
+    );
+
+    const uniqueCommunityIds = new Set(
+      [
+        ...descendantHoots.map((hoot) => hoot.community?._id?.toString()), // Use optional chaining to handle possible undefined values
+        mainHoot.community?._id?.toString(),
+      ].filter((id) => id !== undefined)
+    );
+
+    // Recursively delete child threads and their descendants
+    await Hoot.deleteMany({ _id: { $in: descendantHootIds } });
+
+    // Update User model
+    await User.updateMany(
+      { _id: { $in: Array.from(uniqueAuthorIds) } },
+      { $pull: { hoots: { $in: descendantHootIds } } }
+    );
+
+    // Update Community model
+    await Community.updateMany(
+      { _id: { $in: Array.from(uniqueCommunityIds) } },
+      { $pull: { hoots: { $in: descendantHootIds } } }
+    );
+
+    revalidatePath(path);
+  } catch (error: any) {
+    throw new Error(`Failed to delete hoot: ${error.message}`);
   }
 }

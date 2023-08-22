@@ -2,6 +2,8 @@ import { fetchUserHoots } from "@/lib/actions/user.actions";
 import { redirect } from "next/navigation";
 import React from "react";
 import HootCard from "../cards/hootCard";
+import { fetchCommunityPosts } from "@/lib/actions/community.actions";
+import { log } from "console";
 // import { IHoot } from "@/lib/models/hoot.model";
 
 interface Props {
@@ -11,7 +13,10 @@ interface Props {
 }
 
 async function HootsTab({ currentUserId, accountId, accountType }: Props) {
-  let res = await fetchUserHoots(accountId);
+  let res =
+    accountType === "Community"
+      ? await fetchCommunityPosts(accountId)
+      : await fetchUserHoots(accountId);
 
   if (!res) redirect("/");
 
@@ -30,9 +35,9 @@ async function HootsTab({ currentUserId, accountId, accountType }: Props) {
               accountType === "User"
                 ? { name: res.name, image: res.image, id: res.id }
                 : {
-                    name: res.author.name,
-                    image: res.author.image,
-                    id: res.author.id,
+                    name: hoot.author.name,
+                    image: hoot.author.image,
+                    id: hoot.author.id,
                   }
             }
             community={hoot.commuinity}

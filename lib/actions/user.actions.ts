@@ -5,6 +5,7 @@ import User from "../models/user.model";
 import { connectToDB } from "../mongoose";
 import Hoot from "../models/hoot.model";
 import { FilterQuery, SortOrder } from "mongoose";
+import Community from "../models/community.model";
 
 interface Params {
   userId: string;
@@ -50,11 +51,10 @@ export async function fetchUser(userId: string) {
   try {
     connectToDB();
 
-    return await User.findOne({ id: userId });
-    // .populate({
-    //   path: "communities",
-    //   model: Community,
-    // });
+    return await User.findOne({ id: userId }).populate({
+      path: "communities",
+      model: Community,
+    });
   } catch (error: any) {
     throw new Error(`could not fetch user from mongo: ${error.message}`);
   }
@@ -64,36 +64,22 @@ export async function fetchUserHoots(userId: string) {
   connectToDB();
 
   try {
-    // const hoots = await User.findOne({ id: userId }).populate({
-    //   path: "hoots",
-    //   model: Hoot,
-    //   populate: {
-    //     path: "children",
-    //     model: Hoot,
-    //     populate: {
-    //       path: "author",
-    //       model: User,
-    //       select: "name image id",
-    //     },
-    //   },
-    // });
-
     const hoots = await User.findOne({ id: userId }).populate({
       path: "hoots",
       model: Hoot,
       populate: [
-        // {
-        //   path: "community",
-        //   model: Community,
-        //   select: "name id image _id", // Select the "name" and "_id" fields from the "Community" model
-        // },
+        {
+          path: "community",
+          model: Community,
+          select: "name id image _id",
+        },
         {
           path: "children",
           model: Hoot,
           populate: {
             path: "author",
-            // model: User,
-            select: "name image id", // Select the "name" and "_id" fields from the "User" model
+            model: User,
+            select: "name image id",
           },
         },
       ],
@@ -126,7 +112,7 @@ export async function fetchUsers({
     const regx = new RegExp(searchString, "i");
 
     const query: FilterQuery<typeof User> = {
-      id: { $ne: userId },
+      id: { $ne: userId }, // ne == not equal
     };
 
     if (searchString.trim() !== "") {
@@ -136,6 +122,7 @@ export async function fetchUsers({
     const sortOptions: { [key: string]: SortOrder } = {
       createdAt: sortBy,
     };
+
     const usersQuery = User.find(query)
       .sort(sortOptions)
       .skip(skipAmount)

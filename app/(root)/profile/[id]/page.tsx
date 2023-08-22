@@ -18,7 +18,6 @@ interface Props {
 
 async function Page({ params }: Props) {
   const user = await currentUser();
-  log(params, "params");
   if (!user) return null;
 
   const userInfo = await fetchUser(params.id);

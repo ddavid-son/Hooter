@@ -27,6 +27,7 @@ interface Props {
 function PostHoot({ userId }: Props) {
   const pathname = usePathname();
   const router = useRouter();
+  const { organization } = useOrganization();
 
   const form = useForm({
     resolver: zodResolver(HootValidation),
@@ -40,7 +41,7 @@ function PostHoot({ userId }: Props) {
     await createHoot({
       text: values.hoot,
       author: userId,
-      communityId: null,
+      communityId: organization ? organization.id : null,
       path: pathname,
     });
 

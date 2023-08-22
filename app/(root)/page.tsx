@@ -3,6 +3,7 @@ import { fetchHoots } from "@/lib/actions/hoot.actions";
 import User from "@/lib/models/user.model";
 import { UserButton } from "@clerk/nextjs";
 import { currentUser } from "@clerk/nextjs";
+import { log } from "console";
 
 export default async function Home() {
   const res = await fetchHoots(1, 30);
@@ -25,8 +26,8 @@ export default async function Home() {
                   parentId={hoot?.parentId}
                   content={hoot.text}
                   author={hoot.author}
-                  community={hoot.commuinity}
-                  createdAt={hoot.creaatedAt}
+                  community={hoot.community}
+                  createdAt={hoot.createdAt}
                   comments={hoot.children}
                 />
               );
