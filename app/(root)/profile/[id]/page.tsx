@@ -23,8 +23,6 @@ async function Page({ params }: Props) {
 
   const userInfo = await fetchUser(params.id);
 
-  console.log("is onboarded:", userInfo);
-
   if (!userInfo?.onboarded) redirect("/onboarding");
 
   return (

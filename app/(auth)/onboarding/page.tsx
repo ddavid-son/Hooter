@@ -8,7 +8,6 @@ async function Page() {
   if (!user) return null;
 
   const userInfo = await fetchUser(user.id);
-  console.log("passed to user profile", userInfo);
   if (userInfo.onboarded) redirect("/");
 
   const userData = {
