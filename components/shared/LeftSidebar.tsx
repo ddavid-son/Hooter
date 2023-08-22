@@ -1,11 +1,11 @@
 "use client";
-import React from "react";
 import { sidebarLinks } from "../../constants/index";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import { SignedIn, SignOutButton, useAuth } from "@clerk/nextjs";
-export const LeftSidebar = () => {
+
+function LeftSidebar() {
   const router = useRouter();
   const pathname = usePathname();
   const { userId } = useAuth();
@@ -54,6 +54,6 @@ export const LeftSidebar = () => {
       </div>
     </section>
   );
-};
+}
 
 export default LeftSidebar;

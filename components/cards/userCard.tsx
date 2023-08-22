@@ -1,7 +1,6 @@
 "use client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React from "react";
 import { Button } from "../ui/button";
 
 interface Props {
@@ -12,7 +11,7 @@ interface Props {
   personType: string;
 }
 
-export const UserCard = ({ name, username, imgUrl, id, personType }: Props) => {
+function UserCard({ name, username, imgUrl, id, personType }: Props) {
   const router = useRouter();
 
   return (
@@ -42,6 +41,6 @@ export const UserCard = ({ name, username, imgUrl, id, personType }: Props) => {
       </div>
     </article>
   );
-};
+}
 
 export default UserCard;

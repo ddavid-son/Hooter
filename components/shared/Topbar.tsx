@@ -1,9 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
-import React from "react";
 import { OrganizationSwitcher, SignedIn, SignOutButton } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
-export const Topbar = () => {
+
+function Topbar() {
   return (
     <nav className="topbar">
       <Link href="/" className="flex item-center gap-4">
@@ -36,6 +36,6 @@ export const Topbar = () => {
       </div>
     </nav>
   );
-};
+}
 
 export default Topbar;

@@ -3,10 +3,9 @@ import { fetchHootById } from "@/lib/actions/hoot.actions";
 import { fetchUser } from "@/lib/actions/user.actions";
 import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
-import React from "react";
 import Comment from "@/components/forms/Comment";
 
-export const Page = async ({ params }: { params: { id: string } }) => {
+async function Page({ params }: { params: { id: string } }) {
   if (!params.id) return null;
 
   const user = await currentUser();
@@ -60,5 +59,5 @@ export const Page = async ({ params }: { params: { id: string } }) => {
       </div>
     </section>
   );
-};
+}
 export default Page;

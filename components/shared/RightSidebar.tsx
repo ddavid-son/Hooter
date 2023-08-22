@@ -1,6 +1,4 @@
-import React from "react";
-
-export const RightSidebar = () => {
+function RightSidebar() {
   return (
     <section className="custom-scrollbar rightsidebar">
       <div className="flex flex-1 flex-col justify-start">
@@ -13,6 +11,6 @@ export const RightSidebar = () => {
       </div>
     </section>
   );
-};
+}
 
 export default RightSidebar;

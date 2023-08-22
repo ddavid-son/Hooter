@@ -10,14 +10,14 @@ interface Props {
   bio: string;
 }
 
-export const ProfileHeader = ({
+function ProfileHeader({
   accountId,
   author,
   name,
   username,
   imgUrl,
   bio,
-}: Props) => {
+}: Props) {
   return (
     <div className="flex w-full flex-col justify-start">
       <div className=" flex items-center justify-between">
@@ -46,6 +46,6 @@ export const ProfileHeader = ({
       <div className="mt-12 h-0.5 w-full bg-dark-3" />
     </div>
   );
-};
+}
 
 export default ProfileHeader;

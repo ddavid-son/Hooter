@@ -1,5 +1,5 @@
 "use client";
-import React, { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UserValidation } from "@/lib/validations/user";
@@ -36,7 +36,7 @@ interface Props {
   btnTitle: string;
 }
 
-export const AccountProfile = ({ user, btnTitle }: Props) => {
+function AccountProfile({ user, btnTitle }: Props) {
   const [files, setFiles] = useState<File[]>([]);
   const { startUpload } = useUploadThing("media");
   const pathname = usePathname();
@@ -215,6 +215,6 @@ export const AccountProfile = ({ user, btnTitle }: Props) => {
       </form>
     </Form>
   );
-};
+}
 
 export default AccountProfile;

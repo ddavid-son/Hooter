@@ -1,6 +1,5 @@
 import Link from "next/link";
 import Image from "next/image";
-import React from "react";
 
 interface Props {
   id: string;
@@ -26,7 +25,7 @@ interface Props {
   isComment?: boolean;
 }
 
-export const HootCard = ({
+function HootCard({
   id,
   currentUserId,
   parentId,
@@ -36,7 +35,7 @@ export const HootCard = ({
   createdAt,
   comments,
   isComment,
-}: Props) => {
+}: Props) {
   return (
     <article
       className={`flex w-full flex-col rounded-xl ${
@@ -112,6 +111,6 @@ export const HootCard = ({
       </div>
     </article>
   );
-};
+}
 
 export default HootCard;

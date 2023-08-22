@@ -10,11 +10,7 @@ interface Props {
   accountType: string;
 }
 
-export const HootsTab = async ({
-  currentUserId,
-  accountId,
-  accountType,
-}: Props) => {
+async function HootsTab({ currentUserId, accountId, accountType }: Props) {
   let res = await fetchUserHoots(accountId);
 
   if (!res) redirect("/");
@@ -47,6 +43,6 @@ export const HootsTab = async ({
       })}
     </section>
   );
-};
+}
 
 export default HootsTab;
