@@ -148,9 +148,38 @@ export async function addCommentToHoot(
 
     originalHoot.children.push(savedCommentThread._id);
     await originalHoot.save();
-    revalidatePath(path);
+    revalidatePath(path); // need to see if this method of 'updating the parent component is good '
   } catch (error: any) {
     throw new Error(`Error adding comment to thread: ${error.message}`);
+  }
+}
+
+export async function likeHoot(hootId: string, userId: string, path: string) {
+  try {
+    connectToDB();
+
+    const user = await User.findById(userId);
+    const hoot = await Hoot.findById(hootId);
+
+    log("user likes", typeof user.likes);
+
+    const userLikes = user.likes;
+    const hootLikes = hoot.likes;
+
+    if (userLikes.has(hootId)) {
+      userLikes.delete(hootId);
+      hootLikes.delete(userId);
+    } else {
+      userLikes.set(hootId);
+      hootLikes.set(hootId);
+    }
+
+    user.save();
+    hoot.save();
+
+    // revalidatePath(path);
+  } catch (error: any) {
+    throw new Error(`failed liking the hoot error: ${error}`);
   }
 }
 

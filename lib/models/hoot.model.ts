@@ -13,6 +13,20 @@ const hootSchema = new mongoose.Schema({
   },
   createdAt: { type: Date, default: Date.now },
   parentId: { type: String },
+  likes: {
+    type: mongoose.Schema.Types.Map,
+    of: String,
+  },
+  // {
+  //   type: Map,
+  //   of: new mongoose.Schema({
+  //     // from https://mongoosejs.com/docs/schematypes.html (map section)
+  //     handle: String,
+  //     _id: mongoose.Schema.Types.ObjectId,
+  //     ref: "User",
+  //   }),
+  // },
+  // likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   children: [
     {
       type: mongoose.Schema.Types.ObjectId,

@@ -1,8 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
-import { classNames } from "uploadthing/client";
 import { formatDateString, formatTimeSinceString } from "@/lib/utils";
-import { log } from "console";
+import HootControls from "@/components/cards/hootControls";
+import { currentUser } from "@clerk/nextjs";
+import { fetchUser } from "@/lib/actions/user.actions";
 
 interface Props {
   id: string;
@@ -29,7 +30,7 @@ interface Props {
   view?: "full" | "";
 }
 
-function HootCard({
+async function HootCard({
   id,
   currentUserId,
   parentId,
@@ -41,6 +42,12 @@ function HootCard({
   isComment,
   view = "",
 }: Props) {
+  const user = await currentUser();
+  if (!user) return null;
+
+  const userInfo = await fetchUser(user.id);
+  if (!userInfo) return null;
+
   return (
     <article
       className={`flex w-full flex-col rounded-xl ${
@@ -86,38 +93,11 @@ function HootCard({
             <div
               className={` ${isComment && "mb-10"} mt-5 flex flex-col gap-3`}
             >
-              <div className="flex gap-3.5">
-                <Image
-                  src={"/assets/heart-gray.svg"}
-                  alt="like button"
-                  width={24}
-                  height={24}
-                  className=" cursor-pointer  object-contain"
-                />
-                <Link href={`/hoot/${id}`}>
-                  <Image
-                    src={"/assets/reply.svg"}
-                    alt="reply button"
-                    width={24}
-                    height={24}
-                    className=" cursor-pointer  object-contain"
-                  />
-                </Link>
-                <Image
-                  src={"/assets/repost.svg"}
-                  alt="repost button"
-                  width={24}
-                  height={24}
-                  className=" cursor-pointer  object-contain"
-                />
-                <Image
-                  src={"/assets/share.svg"}
-                  alt="share button"
-                  width={24}
-                  height={24}
-                  className=" cursor-pointer  object-contain"
-                />
-              </div>
+              <HootControls
+                userId={userInfo._id.toString()}
+                id={id.toString()}
+              />
+
               {isComment && comments.length > 0 && (
                 <Link href={`/hoots/${id}`}></Link>
               )}
