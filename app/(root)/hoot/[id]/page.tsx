@@ -27,8 +27,9 @@ async function Page({ params }: { params: { id: string } }) {
           content={hoot.text}
           author={hoot.author}
           community={hoot.commuinity}
-          createdAt={hoot.creaatedAt}
+          createdAt={hoot.createdAt}
           comments={hoot.children}
+          view="full"
         />
       </div>
 
@@ -50,7 +51,7 @@ async function Page({ params }: { params: { id: string } }) {
               content={child.text}
               author={child.author}
               community={child.commuinity}
-              createdAt={child.creaatedAt}
+              createdAt={child.createdAt}
               comments={child.children}
               isComment={true}
             />

@@ -2,6 +2,7 @@ import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import { fetchUser, fetchUsers } from "@/lib/actions/user.actions";
 import UserCard from "@/components/cards/userCard";
+import Searchbar from "@/components/shared/Searchbar";
 
 async function Page() {
   const user = await currentUser();
@@ -20,6 +21,10 @@ async function Page() {
   return (
     <section>
       <h1 className="head-text mb-10">Search</h1>
+      <div className="">
+        gfgg
+        <Searchbar searchType="search"></Searchbar>
+      </div>
       <div className="mt-14 flex flex-col gap-9">
         {res.users.length === 0 ? (
           <p className="no-result">No Users</p>

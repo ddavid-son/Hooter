@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { classNames } from "uploadthing/client";
-import { formatDateString } from "@/lib/utils";
+import { formatDateString, formatTimeSinceString } from "@/lib/utils";
 import { log } from "console";
 
 interface Props {
@@ -26,6 +26,7 @@ interface Props {
     };
   }[];
   isComment?: boolean;
+  view?: "full" | "";
 }
 
 function HootCard({
@@ -38,6 +39,7 @@ function HootCard({
   createdAt,
   comments,
   isComment,
+  view = "",
 }: Props) {
   return (
     <article
@@ -45,7 +47,7 @@ function HootCard({
         isComment ? "px-0 xs:px-7" : "bg-dark-2 p-7"
       }`}
     >
-      <div className=" flex items-start justify-between">
+      <div className=" flex flex-col items-start justify-between">
         <div className="flex w-full flex-1 flex-row gap-4">
           <div className=" flex items-center flex-col">
             <Link
@@ -63,12 +65,23 @@ function HootCard({
 
             <div className=" thread-card_bar" />
           </div>
+
           <div className="flex w-full flex-col">
-            <Link className=" w-fit" href={`/profile/${author.id}`}>
+            <Link
+              className=" flex  gap-2 items-baseline  w-fit"
+              href={`/profile/${author.id}`}
+            >
               <h4 className=" cursor-pointer text-base-semibold  text-light-1 ">
                 {author.name}
               </h4>
+
+              {view === "" && (
+                <p className="text-subtle-medium text-gray-1">
+                  {formatTimeSinceString(createdAt)}
+                </p>
+              )}
             </Link>
+
             <p className=" mt-2 text-small-regular text-light-2">{content}</p>
             <div
               className={` ${isComment && "mb-10"} mt-5 flex flex-col gap-3`}
@@ -111,13 +124,18 @@ function HootCard({
             </div>
           </div>
         </div>
+        {view === "full" && (
+          <p className=" pl-[60px] pt-2 text-subtle-medium text-gray-1">
+            {formatDateString(createdAt)}{" "}
+          </p>
+        )}
       </div>
       {!isComment && community && (
         <Link
           href={`/communities/${community.id}`}
           className="mt-5 flex items-center"
         >
-          <p className=" text-subtle-medium text-gray-1">
+          <p className=" pl-[22px] text-subtle-medium text-gray-1">
             {formatDateString(createdAt)} - {community.name} Community
           </p>
           <Image

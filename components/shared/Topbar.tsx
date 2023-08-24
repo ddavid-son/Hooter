@@ -6,9 +6,10 @@ import { dark } from "@clerk/themes";
 function Topbar() {
   return (
     <nav className="topbar">
-      <Link href="/" className="flex item-center gap-4">
-        <Image width={28} height={28} src="/assets/logo.svg" alt="logo" />
-        <p className="text-light-1 max-xs:hidden">Hooter</p>
+      <Link href="/" className="flex items-center item-center gap-4">
+        <Image width={42} height={42} src="/assets/logo.png" alt="logo" />
+        {/* <Image width={28} height={28} src="/assets/logo.svg" alt="logo" /> */}
+        <p className="text-light-1  text-base-semibold max-xs:hidden">Hooter</p>
       </Link>
       <div className="flex items-center gap-1">
         <div className="block md:hidden">

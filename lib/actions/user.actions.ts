@@ -60,6 +60,19 @@ export async function fetchUser(userId: string) {
   }
 }
 
+export async function fetchUserByUsername(username: string) {
+  try {
+    connectToDB();
+
+    return await User.findOne({ username: username }).populate({
+      path: "communities",
+      model: Community,
+    });
+  } catch (error: any) {
+    throw new Error(`could not fetch user from mongo: ${error.message}`);
+  }
+}
+
 export async function fetchUserHoots(userId: string) {
   connectToDB();
 

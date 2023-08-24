@@ -31,6 +31,30 @@ export function formatDateString(dateString: string) {
   return `${time} - ${formattedDate}`;
 }
 
+export function formatTimeSinceString(dateString: string) {
+  // const date = new Date(dateString).getUTCMilliseconds();
+  // const timeDiff = Date.UTC(Date.now()) - date;
+
+  const date = new Date(dateString).getTime();
+  const timeDiff = Date.now() - date;
+
+  const secs = Math.floor(timeDiff / 1000);
+  const mins = Math.floor(secs / 60);
+  const hours = Math.floor(mins / 60);
+  const days = Math.floor(hours / 24);
+  const months = Math.floor(days / 30);
+  const years = Math.floor(months / 12);
+
+  // console.log({ secs, mins, hours, days, months, years });
+
+  if (years >= 1) return `${years} year${years > 1 ? "s" : ""} ago`;
+  if (months >= 1) return `${months} month${months > 1 ? "s" : ""} ago`;
+  if (days >= 1) return `${days} day${days > 1 ? "s" : ""} ago`;
+  if (hours >= 1) return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+  if (mins >= 1) return `${mins} min${mins > 1 ? "s" : ""} ago`;
+  if (secs >= 1) return `${secs} sec${secs > 1 ? "s" : ""} ago`;
+}
+
 export function formatThreadCount(count: number): string {
   if (count === 0) {
     return "No Threads";
