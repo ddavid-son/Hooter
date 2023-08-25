@@ -23,10 +23,12 @@ export async function createHoot({ text, author, communityId, path }: Params) {
       { _id: 1 }
     );
 
+    // const u = new Hoot({});
     const createdHoot = await Hoot.create({
       text,
       author,
       community: communityIdObject,
+      likes: {},
     });
 
     await User.findByIdAndUpdate(author, {
@@ -161,19 +163,16 @@ export async function likeHoot(hootId: string, userId: string, path: string) {
     const user = await User.findById(userId);
     const hoot = await Hoot.findById(hootId);
 
-    log("user likes", typeof user.likes);
-
-    const userLikes = user.likes;
-    const hootLikes = hoot.likes;
-
-    if (userLikes.has(hootId)) {
-      userLikes.delete(hootId);
-      hootLikes.delete(userId);
+    if (user.likes.has(hootId)) {
+      user.likes.delete(hootId);
+      hoot.likes.delete(userId);
     } else {
-      userLikes.set(hootId);
-      hootLikes.set(hootId);
+      user.likes.set(hootId, hootId);
+      hoot.likes.set(userId, userId);
     }
 
+    // user.markModified("likes");
+    // hoot.markModified("likes");
     user.save();
     hoot.save();
 

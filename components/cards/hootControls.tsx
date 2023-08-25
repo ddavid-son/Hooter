@@ -4,8 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { likeHoot } from "@/lib/actions/hoot.actions";
-import { boolean } from "zod";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 interface Props {
   id: string;
