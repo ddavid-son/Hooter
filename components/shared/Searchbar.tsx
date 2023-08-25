@@ -14,13 +14,13 @@ function Searchbar({ searchType }: Props) {
   const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
 
-  function handleSubmit(e: MouseEvent) {
-    e.preventDefault();
-    // here fetch data from backend
-    router.push(
-      `/${searchType}/${searchType === "search" ? `q=${searchQuery}` : ""}`
-    );
-  }
+  // function handleSubmit(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  //   e.preventDefault();
+  //   // here fetch data from backend
+  //   router.push(
+  //     `/${searchType}/${searchType === "search" ? `q=${searchQuery}` : ""}`
+  //   );
+  // }
 
   return (
     <div className="flex items-center gap-4 w-full">
@@ -44,9 +44,9 @@ function Searchbar({ searchType }: Props) {
         />
       </div>
       <Button
-        onClick={(e) => {
-          handleSubmit(e);
-        }}
+        // onClick={(e) => {
+        //   handleSubmit(e);
+        // }}
         className=" h-full py-4"
       >
         Search
