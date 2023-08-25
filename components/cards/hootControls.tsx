@@ -9,7 +9,7 @@ import { useEffect } from "react";
 interface Props {
   id: string;
   userId: string;
-  isLiked: boolean;
+  isLiked?: boolean;
 }
 
 const HootControls = ({ id, userId, isLiked }: Props) => {
